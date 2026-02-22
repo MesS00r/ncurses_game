@@ -20,7 +20,7 @@ include_directories(include lib)
 file (GLOB_RECURSE SOURCES
     "src/main.cpp"
     "lib/extra_class/*.cpp"
-    "lib/fixed_obj_class/*.cpp"
+    "lib/environment_class/*.cpp"
     "lib/move_obj_class/*.cpp"
     "lib/move_obj_class/npc_child_class/*.cpp"
 )

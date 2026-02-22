@@ -2,9 +2,10 @@
 #define PLAYER_H_INCLUDED
 
 #include <ncurses.h>
-#include <tvector.h>
+#include <common.h>
+#include <extra_class/map.h>
 
-class Player {
+class Player : public Map {
 private:
     const int ch, color_pair;
     int speed;
@@ -15,7 +16,7 @@ public:
 
     void update(int key);
     Tvec& get_pos();
-    void set_pos(Tvec& pos);
+    void set_pos(Tvec& new_pos);
 
     Player(const Player&) = delete;
     Player& operator = (const Player&) = delete;

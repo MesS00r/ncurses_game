@@ -1,5 +1,4 @@
 #include "player.h"
-#include "tvector.h"
 
 Player::Player() 
     : ch(0), color_pair(0), speed(0), pos(0, 0) {}
@@ -16,7 +15,7 @@ void Player::update(int key) {
     }
 
     attron(COLOR_PAIR(color_pair));
-    mvprintw(pos.y, pos.x, "%c", ch);
+    mvaddch(pos.y, pos.x, static_cast<chtype>(ch));
     attroff(COLOR_PAIR(color_pair));
 }
 

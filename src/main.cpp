@@ -46,8 +46,8 @@ int main() {
         mvprintw(1, 0, "key: %c:%d", copy_key, copy_key);
         attroff(COLOR_PAIR(2) | A_BOLD);
 
-        player.update(key);
         map.draw(100, 100);
+        player.update(key, map.get_maparr());
 
         refresh();
         napms(30);

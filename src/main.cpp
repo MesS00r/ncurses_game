@@ -1,5 +1,7 @@
 #include <move_obj_class/player.h>
 #include <extra_class/map.h>
+#include <fstream>
+#include <unistd.h>
 
 constexpr int PLAYER_CH = 'P';
 constexpr int PLAYER_PAIR = 1;
@@ -13,6 +15,7 @@ int main() {
 
         endwin();
         delscreen(s);
+        exit_curses(0);
         return 0;
     }
 
@@ -32,18 +35,27 @@ int main() {
     Map map(100, 100, '#', 3);
     map.set_cell(WALL, 10, 10);
 
-    while (1) {
+    while (TRUE) {
         key = getch();
         if (key == KEY_CTRLC) {
             endwin();
             delscreen(s);
+            exit_curses(0);
             return 0;
         }
         else if (key != -1) copy_key = key;
 
         attron(COLOR_PAIR(2) | A_BOLD);
-        mvprintw(0, 0, "x, y: %d, %d", player.get_pos().x, player.get_pos().y);
-        mvprintw(1, 0, "key: %c:%d", copy_key, copy_key);
+        std::ifstream statm("/proc/self/statm");
+        long pages = 0;
+        if (statm >> pages >> pages) {
+            long rss_kb = pages * sysconf(_SC_PAGESIZE) / 1024;
+            mvprintw(0, 0, "mem: %ld KB", rss_kb);
+        }
+        statm.close();
+
+        mvprintw(1, 0, "x, y: %d, %d ", player.get_pos().x, player.get_pos().y);
+        mvprintw(2, 0, "key: %c:%d ", copy_key, copy_key);
         attroff(COLOR_PAIR(2) | A_BOLD);
 
         map.draw(100, 100);
@@ -51,10 +63,10 @@ int main() {
 
         refresh();
         napms(30);
-        erase();
     }
     
     endwin();
     delscreen(s);
+    exit_curses(0);
     return 0;
 }

@@ -7,7 +7,8 @@ Player::Player(const int p_ch, int p_speed, const int p_color_pair, int p_x, int
     : ch(p_ch), color_pair(p_color_pair), speed(p_speed), pos(p_x, p_y) {}
 
 void Player::update(int key, Maparr& map) {
-    Tveci direction;
+    Tvec direction;
+    Tvec prev_pos;
 
     switch (key) {
     case 'w': case 'W': direction.y = -1; break;
@@ -15,20 +16,23 @@ void Player::update(int key, Maparr& map) {
     case 'a': case 'A': direction.x = -1; break;
     case 'd': case 'D': direction.x = 1; break;
     }
-
-    Tveci next_cell = pos + direction;
-    if (map(next_cell) == NONE) pos += direction * speed;
+    prev_pos = pos;
+    Tvec next_cell = (pos + direction);
+    if (next_cell < Tvec(map.x, map.y) &&
+        next_cell >= Tvec(0, 0) &&
+        map(next_cell) == NONE) pos += direction * speed;
 
     attron(COLOR_PAIR(color_pair));
+    mvaddch(prev_pos.y, prev_pos.x, ' ');
     mvaddch(pos.y, pos.x, sc<chtype>(ch));
     attroff(COLOR_PAIR(color_pair));
 }
 
-Tveci& Player::get_pos() {
+Tvec& Player::get_pos() {
     return pos;
 }
 
-void Player::set_pos(Tveci& new_pos) {
+void Player::set_pos(Tvec& new_pos) {
     pos = new_pos;
 }
 

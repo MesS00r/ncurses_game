@@ -10,15 +10,16 @@ private:
     const int wallch, wall_color_pair;
 public:
     Map();
-    Map(const size_t m_size_x, const size_t m_size_y,
+    Map(const int m_size_x, const int m_size_y,
         const int m_wallch, const int m_wall_color_pair);
 
-    void draw(size_t w_size_x, size_t w_size_y);
-    env_type get_cell(size_t c_x, size_t c_y);
-    env_type get_cell(Tvecs c_pos);
+    void draw(int w_size_x, int w_size_y);
+    env_type get_cell(int c_x, int c_y);
+    env_type get_cell(Tvec c_pos);
     Maparr& get_maparr();
-    void set_cell(env_type type, size_t c_x, size_t c_y);
-    void set_cell(env_type type, Tvecs c_pos);
+    void set_cell(env_type type, int c_x, int c_y);
+    void set_cell(env_type type, Tvec c_pos);
+    void del_map();
 
     Map(const Map&) = delete;
     Map& operator = (const Map&) = delete;

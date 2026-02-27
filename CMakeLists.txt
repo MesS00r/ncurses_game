@@ -24,4 +24,4 @@ file (GLOB_RECURSE SOURCES
 add_executable(ncurses_game  ${SOURCES})
 
 target_include_directories(ncurses_game PRIVATE ${CURSES_INCLUDE_DIRS})
-target_link_libraries(ncurses_game ${CURSES_LIBRARIES})
+target_link_libraries(ncurses_game ${CURSES_LIBRARIES} panel)

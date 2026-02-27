@@ -82,7 +82,8 @@
 				5,
 				6,
 				7,
-				8
+				8,
+				9
 			]
 		}
 	],
@@ -106,6 +107,11 @@
 			{
 				"backtrace" : 2,
 				"fragment" : "/usr/lib/x86_64-linux-gnu/libformw.so",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-lpanel",
 				"role" : "libraries"
 			}
 		],
@@ -132,7 +138,8 @@
 				5,
 				6,
 				7,
-				8
+				8,
+				9
 			]
 		}
 	],
@@ -154,6 +161,12 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "lib/extra_class/map.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "lib/extra_class/stats.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{

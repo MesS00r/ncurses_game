@@ -24,7 +24,7 @@ env_type Map::get_cell(int c_x, int c_y) {
     return map(c_x, c_y);
 }
 
-env_type Map::get_cell(Tvec c_pos) {
+env_type Map::get_cell(Tvec& c_pos) {
     return map(c_pos);
 }
 
@@ -36,7 +36,7 @@ void Map::set_cell(env_type type, int c_x, int c_y) {
     map(c_x, c_y) = type;
 }
 
-void Map::set_cell(env_type type, Tvec c_pos) {
+void Map::set_cell(env_type type, Tvec& c_pos) {
     map(c_pos) = type;
 }
 

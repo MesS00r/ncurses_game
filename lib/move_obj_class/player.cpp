@@ -16,11 +16,13 @@ void Player::update(int key, Maparr& map) {
     case 'a': case 'A': direction.x = -1; break;
     case 'd': case 'D': direction.x = 1; break;
     }
+
     prev_pos = pos;
     Tvec next_cell = (pos + direction);
-    if (next_cell < Tvec(map.x, map.y) &&
-        next_cell >= Tvec(0, 0) &&
-        map(next_cell) == NONE) pos += direction * speed;
+
+    if (!(next_cell < Tvec(map.x, map.y))) return;
+    if (!(next_cell >= Tvec(0, 0))) return;
+    if (map(next_cell) == NONE) pos += direction * speed;
 
     attron(COLOR_PAIR(color_pair));
     mvaddch(prev_pos.y, prev_pos.x, ' ');

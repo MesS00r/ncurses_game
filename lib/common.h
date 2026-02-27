@@ -8,6 +8,10 @@ T sc(U val) { return static_cast<T>(val); }
 
 constexpr int KEY_CTRLC = 3;
 
+typedef unsigned int exit_code;
+constexpr exit_code CONTINUE = 0;
+constexpr exit_code EXIT = 1;
+
 typedef unsigned int env_type;
 constexpr env_type NONE = 0;
 constexpr env_type WALL = 1;

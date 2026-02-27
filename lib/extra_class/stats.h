@@ -3,7 +3,6 @@
 
 #include <ncurses.h>
 #include <common.h>
-#include <panel.h>
 #include <fstream> // IWYU pragma: keep
 #include <unistd.h>
 
@@ -11,7 +10,6 @@ class Stats {
 private:
     long pages, rss_kb = 0;
     WINDOW *stats_win;
-    PANEL *stats;
 public:
     Stats();
     Stats(int s_height, int s_width, int s_color_pair, int s_x = 0, int s_y = 0);

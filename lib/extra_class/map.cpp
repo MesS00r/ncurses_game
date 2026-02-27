@@ -10,6 +10,7 @@ void Map::draw(int w_size_x, int w_size_y) {
     for(int i = 0; i < w_size_y; i++) {
         for(int j = 0; j < w_size_x; j++) {
             env_type ch = map(j, i);
+
             switch (ch) {
             case WALL:
                 attron(COLOR_PAIR(wall_color_pair));

@@ -8,6 +8,40 @@ constexpr int WALL_CH = '#';
 constexpr int WALL_PAIR = 2;
 constexpr int STATS_PAIR = 3;
 
+int key;
+Stats *stats;
+Player *player;
+Map *map;
+
+void setup() {
+    raw();
+    nodelay(stdscr, TRUE);
+    noecho();
+    curs_set(0);
+
+    start_color();
+    init_pair(PLAYER_PAIR, COLOR_GREEN, COLOR_BLACK);
+    init_pair(WALL_PAIR, COLOR_RED, COLOR_BLACK);
+    init_pair(STATS_PAIR, COLOR_BLACK, COLOR_WHITE);
+
+    stats = new Stats(3, 15, STATS_PAIR);
+    player = new Player(PLAYER_CH, 1, PLAYER_PAIR);
+    map = new Map(100, 100, WALL_CH, WALL_PAIR);
+}
+
+exit_code loop() {
+    key = getch();
+    if (key == KEY_CTRLC) return EXIT;
+
+    stats->draw(key, player->get_pos());
+    map->draw(100, 100);
+    player->update(key, map->get_maparr());
+    
+    wnoutrefresh(stdscr); 
+    napms(30);
+    return CONTINUE;
+}
+
 int main() {
     SCREEN *s;
     s = newterm(NULL, stdout, stdin);
@@ -21,34 +55,12 @@ int main() {
         return 0;
     }
 
-    raw();
-    nodelay(stdscr, TRUE);
-    noecho();
-    curs_set(0);
+    setup();
+    while (TRUE) { if (loop() == EXIT) break; }
 
-    start_color();
-    init_pair(PLAYER_PAIR, COLOR_GREEN, COLOR_BLACK);
-    init_pair(WALL_PAIR, COLOR_RED, COLOR_BLACK);
-    init_pair(STATS_PAIR, COLOR_BLACK, COLOR_WHITE);
-
-    int key;
-    // Stats stats(3, 15, STATS_PAIR);
-    Player player(PLAYER_CH, 1, PLAYER_PAIR);
-    Map map(100, 100, WALL_CH, WALL_PAIR);
-    map.set_cell(WALL, 10, 10);
-
-    while (TRUE) {
-        key = getch();
-        if (key == KEY_CTRLC) break;
-
-        // stats.draw(key, player.get_pos());
-        map.draw(100, 100);
-        player.update(key, map.get_maparr());
-        
-        refresh();
-        // wnoutrefresh(stdscr);
-        napms(30);
-    }
+    delete stats;
+    delete player;
+    delete map;
 
     endwin();
     delscreen(s);

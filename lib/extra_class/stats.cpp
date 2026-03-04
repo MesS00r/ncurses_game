@@ -1,26 +1,36 @@
 #include "stats.h"
 
-Stats::Stats() : stats_win(nullptr) {}
-
-Stats::Stats(int s_height, int s_width, int s_color_pair, int s_x, int s_y) {
-    stats_win = newwin(s_height, s_width, s_y, s_x);
-    wbkgd(stats_win, COLOR_PAIR(s_color_pair) | A_BOLD);
+Stats::Stats(int height, int width, int color_pair, int x, int y)
+: m_stats_win(newwin(height, width, x, y))
+{
+    wbkgd(m_stats_win, COLOR_PAIR(color_pair) | A_BOLD);
 }
 
-Stats::~Stats() { if (stats_win) delwin(stats_win); }
+Stats::~Stats() { if (m_stats_win) delwin(m_stats_win); }
 
-void Stats::draw(int key, Tvec& p_pos) {
+static long check_mem ()
+{
+    long pages = 0; 
+    static long rss_kb = 0;
+
     std::ifstream statm("/proc/self/statm");
     if (statm >> pages >> pages) {
-        rss_kb = pages * sysconf(_SC_PAGESIZE) / 1024;
-        mvwprintw(stats_win, 0, 0, "mem: %ldKB ", rss_kb);
+        rss_kb = pages * sysconf(_SC_PAGESIZE) / KB;
     }
     statm.close();
+    return  rss_kb;
+}
 
-    mvwprintw(stats_win, 1, 0, "x,y: %d,%d ", p_pos.x, p_pos.y);
-    if (key != -1) mvwprintw(stats_win, 2, 0, "key: %c:%d ", key, key);
+void Stats::draw(int key, Tvec& pos)
+{
+    long rss_kb = 0;
+    rss_kb = check_mem();
 
-    touchwin(stats_win);
-    wnoutrefresh(stats_win);
+    mvwprintw(m_stats_win, 0, 0, "mem: %ldKB ", rss_kb);
+    mvwprintw(m_stats_win, 1, 0, "x,y: %d,%d ", pos.x, pos.y);
+    if (key != -1) mvwprintw(m_stats_win, 2, 0, "key: %c:%d ", key, key);
+
+    touchwin(m_stats_win);
+    wnoutrefresh(m_stats_win);
     doupdate();
 }

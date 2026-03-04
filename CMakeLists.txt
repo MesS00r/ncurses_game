@@ -8,10 +8,14 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CURSES_NEED_NCURSES TRUE)
 set(CURSES_NEED_WIDE TRUE)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O1 -Wall -Wextra -Wpedantic -Wformat -Wshadow -Wconversion -Wsign-conversion")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstack-protector-strong -D_FORTIFY_SOURCE=2 -fPIC")
 
 find_package(Curses REQUIRED)
+find_package(Microsoft.GSL REQUIRED)
+
 include_directories(include lib)
 
 file (GLOB_RECURSE SOURCES
@@ -23,5 +27,6 @@ file (GLOB_RECURSE SOURCES
 )
 add_executable(ncurses_game  ${SOURCES})
 
+target_link_libraries(ncurses_game Microsoft.GSL::GSL)
 target_include_directories(ncurses_game PRIVATE ${CURSES_INCLUDE_DIRS})
 target_link_libraries(ncurses_game ${CURSES_LIBRARIES} panel)

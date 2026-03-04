@@ -8,17 +8,19 @@
 
 class Stats {
 private:
-    long pages, rss_kb = 0;
-    WINDOW *stats_win;
+    WINDOW *m_stats_win;
 public:
-    Stats();
-    Stats(int s_height, int s_width, int s_color_pair, int s_x = 0, int s_y = 0);
+    Stats() : Stats(1, 1, 0) {}
+    Stats(int height, int width, int color_pair, int x = 0, int y = 0);
     ~Stats();
 
-    void draw(int key, Tvec& p_pos);
+    void draw(int key, Tvec& pos);
 
     Stats(const Stats&) = delete;
     Stats& operator = (const Stats&) = delete;
+
+    Stats(Stats&&) = default;
+    Stats& operator = (Stats&&) = delete;
 };
 
 #endif //STATS_H_INCLUDED

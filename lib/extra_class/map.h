@@ -7,11 +7,11 @@
 class Map {
 private:
     Maparr m_map;
-    int m_wallch, m_wall_color_pair;
+    chtype m_wallch;
+    int m_wall_color_pair;
 public:
     Map() : Map(0, 0, 0, 0) {}
-    Map(int size_x, int size_y,
-        int wallch, int wall_color_pair);
+    Map(int width, int height, chtype wallch, int wall_color_pair);
 
     void draw(int height, int width);
     env_type get_cell(int x, int y);

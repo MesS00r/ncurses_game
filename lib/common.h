@@ -1,7 +1,6 @@
 #ifndef COMMON_H_INCLUDED
 #define COMMON_H_INCLUDED
 
-#include <cstddef>
 #include <vector>
 
 template<typename T, typename U>
@@ -29,52 +28,52 @@ struct Tvec {
 
     int x, y;
 
-    Tvec operator + (const Tvec& other)
+    Tvec operator + (const Tvec& other) const
     {
         return {x + other.x, y + other.y};
     }
 
-    Tvec operator + (const int num)
+    Tvec operator + (const int num) const
     {
         return {x + num, y + num};
     }
 
-    Tvec operator - (const Tvec& other)
+    Tvec operator - (const Tvec& other) const
     {
         return {x - other.x, y - other.y};
     }
 
-    Tvec operator - (const int num)
+    Tvec operator - (const int num) const
     {
         return {x - num, y - num};
     }
 
-    Tvec operator * (const Tvec& other)
+    Tvec operator * (const Tvec& other) const
     {
         return {x * other.x, y * other.y};
     }
 
-    Tvec operator * (const int num)
+    Tvec operator * (const int num) const
     {
         return {x * num, y * num};
     }
 
-    Tvec operator / (const Tvec& other)
+    Tvec operator / (const Tvec& other) const
     {
         return {x / other.x, y / other.y};
     }
 
-    Tvec operator / (const int num)
+    Tvec operator / (const int num) const
     {
         return {x / num, y / num};
     }
 
-    Tvec operator % (const Tvec& other)
+    Tvec operator % (const Tvec& other) const
     {
         return {x % other.x, y % other.y};
     }
 
-    Tvec operator % (const int num)
+    Tvec operator % (const int num) const
     {
         return {x % num, y % num};
     }
@@ -139,32 +138,32 @@ struct Tvec {
         return *this;
     }
 
-    bool operator > (const Tvec other)
+    bool operator > (const Tvec other) const
     {
         return x > other.x && y > other.y;
     }
 
-    bool operator < (const Tvec other)
+    bool operator < (const Tvec other) const
     {
         return x < other.x && y < other.y;
     }
 
-    bool operator == (const Tvec other)
+    bool operator == (const Tvec other) const
     {
         return x == other.x && y == other.y;
     }
 
-    bool operator != (const Tvec other)
+    bool operator != (const Tvec other) const
     {
         return x != other.x && y != other.y;
     }
 
-    bool operator >= (const Tvec other)
+    bool operator >= (const Tvec other) const
     {
         return x >= other.x && y >= other.y;
     }
 
-    bool operator <= (const Tvec other)
+    bool operator <= (const Tvec other) const
     {
         return x <= other.x && y <= other.y;
     }
@@ -172,31 +171,32 @@ struct Tvec {
 
 struct Maparr {
     std::vector<env_type> map;
-    size_t x, y;
+    int x, y;
 
-    Maparr(size_t height, size_t width)
-    : map(height * width)
+    Maparr(int width, int height)
+    : map(sc<size_t>(height * width))
     , x(width)
     , y(height)
     {}
 
-    env_type& operator () (size_t X, size_t Y) 
+    env_type& operator () (int X, int Y) 
     {
-        return map[Y * y + X];
+        return map[sc<size_t>(Y * y + X)];
     }
 
-    const env_type& operator () (size_t X, size_t Y) const 
+    const env_type& operator () (int X, int Y) const 
     {
-        return map[Y * y + X];
+        return map[sc<size_t>(Y * y + X)];
     }
 
-    env_type& operator () (Tvec& pos) {
-        return map[sc<size_t>(pos.y) * this->y + sc<size_t>(pos.x)];
+    env_type& operator () (Tvec& pos)
+    {
+        return map[sc<size_t>(pos.y * y + pos.x)];
     }
 
     const env_type& operator () (Tvec& pos) const 
     {
-        return map[sc<size_t>(pos.y) * this->y + sc<size_t>(pos.x)];
+        return map[sc<size_t>(pos.y * y + pos.x)];
     }
 };
 

@@ -1,7 +1,7 @@
 #include "stats.h"
 
-Stats::Stats(int height, int width, int color_pair, int x, int y)
-: m_stats_win(newwin(height, width, x, y))
+Stats::Stats(int width, int height, int color_pair, int x, int y)
+: m_stats_win(newwin(width, height, x, y))
 {
     wbkgd(m_stats_win, COLOR_PAIR(color_pair) | A_BOLD);
 }
@@ -21,7 +21,7 @@ static long check_mem ()
     return  rss_kb;
 }
 
-void Stats::draw(int key, Tvec& pos)
+void Stats::draw(chtype key, Tvec& pos)
 {
     long rss_kb = 0;
     rss_kb = check_mem();

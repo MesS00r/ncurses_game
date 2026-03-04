@@ -1,7 +1,7 @@
 #include "map.h"
 
-Map::Map(int size_x, int size_y, int wallch, int wall_color_pair) 
-: m_map(size_x, size_y)
+Map::Map(int width, int height, chtype wallch, int wall_color_pair) 
+: m_map(width, height)
 , m_wallch(wallch)
 , m_wall_color_pair(wall_color_pair)
 {}
@@ -13,18 +13,18 @@ static void draw_tile(int x, int y, int color_pair, chtype ch)
     attroff(COLOR_PAIR(color_pair));
 }
 
-void Map::draw(int height, int width)
+void Map::draw(int width, int height)
 {
-    for(int y = 0; y <  height; y++)
+    for(int i = 0; i <  width * height; i++)
     {
-        for(int x = 0; x < width; x++)
+        int x = i % width;
+        int y = i / width;
+        env_type ch = m_map(x, y);
+     
+        switch (ch)
         {
-            env_type ch = m_map(x, y);
-
-            switch (ch)
-            {
-            case WALL: draw_tile(x, y, m_wall_color_pair, sc<chtype>(m_wallch)); break;
-            }
+        case WALL: draw_tile(x, y, m_wall_color_pair, m_wallch); break;
+        default: break;
         }
     }
 }

@@ -34,7 +34,7 @@ void setup()
 
 exit_code loop()
 {
-    int key = getch();
+    chtype key = sc<chtype>(getch());
     if (key == KEY_CTRLC) return EXIT;
 
     stats->draw(key, player->get_pos());
@@ -47,8 +47,7 @@ exit_code loop()
 }
 
 int main() {
-    SCREEN *s;
-    s = newterm(NULL, stdout, stdin);
+    SCREEN *s = newterm(NULL, stdout, stdin);
     set_term(s);
 
     if (has_colors() == FALSE)

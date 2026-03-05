@@ -1,24 +1,21 @@
 #include "player.h"
 
-Player::Player(chtype ch, int speed, int color_pair, int x, int y)
+Player::Player(chtype_i ch, int speed, int color_pair, const Tvec& pos)
 : m_ch(ch)
 , m_color_pair(color_pair)
 , m_speed(speed)
-, m_pos(x, y)
-{}
+, m_pos(pos) {}
 
-static void draw(Tvec& prev_pos, Tvec& pos, int color_pair, chtype ch)
-{
-    attron(COLOR_PAIR(color_pair));
+static void draw(const Tvec& prev_pos, const Tvec& pos, int color_pair, chtype_i ch) {
     mvaddch(prev_pos.y, prev_pos.x, ' ');
-    mvaddch(pos.y, pos.x, ch);
+
+    attron(COLOR_PAIR(color_pair));
+    mvaddch(pos.y, pos.x, sc<chtype>(ch));
     attroff(COLOR_PAIR(color_pair));
 }
 
-static const Tvec move(int key)
-{
-    switch (key)
-    {
+static const Tvec move(int key) {
+    switch (key) {
     case 'w': case 'W': return {0, -1};
     case 's': case 'S': return {0, 1};
     case 'a': case 'A': return {-1, 0};
@@ -27,16 +24,14 @@ static const Tvec move(int key)
     }
 }
 
-static bool check_col(Tvec& cell, Maparr& map)
-{
+static bool check_col(const Tvec& cell, const Maparr& map) {
     if (!(cell < Tvec(map.x, map.y))) return true;
     if (!(cell >= Tvec(0, 0))) return true;
     if (map(cell) != NONE) return true;
     return false;
 }
 
-void Player::update(int key, Maparr& map)
-{
+void Player::update(int key, const Maparr& map) {
     Tvec direction, prev_pos, next_cell;
 
     direction = move(key);
@@ -49,18 +44,10 @@ void Player::update(int key, Maparr& map)
     draw(prev_pos, m_pos, m_color_pair, m_ch);
 }
 
-Tvec& Player::get_pos()
-{ 
+const Tvec& Player::get_pos() {
     return m_pos; 
 }
 
-void Player::set_pos(Tvec& pos)
-{ 
+void Player::set_pos(const Tvec& pos) {
     m_pos = pos; 
-}
-
-void Player::set_pos(int x, int y)
-{
-    m_pos.x = x;
-    m_pos.y = y;
 }

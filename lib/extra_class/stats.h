@@ -10,11 +10,11 @@ class Stats {
 private:
     WINDOW *m_stats_win;
 public:
-    Stats() : Stats(1, 1, 0) {}
-    Stats(int width, int height, int color_pair, int x = 0, int y = 0);
+    Stats() : Stats({1, 1}, 0, {0, 0}) {}
+    Stats(const Tvec& size, int color_pair, const Tvec& pos);
     ~Stats();
 
-    void draw(chtype key, Tvec& pos);
+    void draw(chtype_i key, const Tvec& pos);
 
     Stats(const Stats&) = delete;
     Stats& operator = (const Stats&) = delete;

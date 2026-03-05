@@ -3,43 +3,47 @@
 #include <extra_class/stats.h>
 #include <memory>
 
-constexpr int PLAYER_CH = 'P';
+constexpr chtype_i PLAYER_CH = '@';
+constexpr chtype_i WALL_CH = '#';
+
 constexpr int PLAYER_PAIR = 1;
-
-constexpr int WALL_CH = '#';
 constexpr int WALL_PAIR = 2;
-
 constexpr int STATS_PAIR = 3;
 
-std::unique_ptr<Stats> stats;
-std::unique_ptr<Player> player;
-std::unique_ptr<Map> map;
+// const Tvec STATS_SIZE = {15, 3};
+// const Tvec MAP_SIZE = {100, 50};
 
-void setup()
-{
-    raw();
-    nodelay(stdscr, TRUE);
-    noecho();
-    curs_set(0);
+struct GameSession {
+    std::unique_ptr<Stats> stats;
+    std::unique_ptr<Player> player;
+    std::unique_ptr<Map> map;
 
-    start_color();
-    init_pair(PLAYER_PAIR, COLOR_GREEN, COLOR_BLACK);
-    init_pair(WALL_PAIR, COLOR_RED, COLOR_BLACK);
-    init_pair(STATS_PAIR, COLOR_BLACK, COLOR_WHITE);
+    GameSession() {
+        raw();
+        nodelay(stdscr, TRUE);
+        noecho();
+        curs_set(0);
 
-    stats = std::make_unique<Stats>(3, 15, STATS_PAIR);
-    player = std::make_unique<Player>(PLAYER_CH, 1, PLAYER_PAIR);
-    map = std::make_unique<Map>(100, 100, WALL_CH, WALL_PAIR);
-}
+        start_color();
+        init_pair(STATS_PAIR, COLOR_BLACK, COLOR_WHITE);
+        init_pair(PLAYER_PAIR, COLOR_GREEN, COLOR_BLACK);
+        init_pair(WALL_PAIR, COLOR_RED, COLOR_BLACK);
 
-exit_code loop()
-{
-    chtype key = sc<chtype>(getch());
+        stats = std::make_unique<Stats>(Tvec{15, 3}, STATS_PAIR, Tvec{1, 2});
+        player = std::make_unique<Player>(PLAYER_CH, 1, PLAYER_PAIR, Tvec{1, 2});
+        map = std::make_unique<Map>(Tvec{100, 50}, WALL_CH, WALL_PAIR);
+
+        map->set_cell(WALL, {10, 15});
+    }
+};
+
+exit_code loop(GameSession& session) {
+    chtype_i key = getch();
     if (key == KEY_CTRLC) return EXIT;
 
-    stats->draw(key, player->get_pos());
-    map->draw(100, 100);
-    player->update(key, map->get_maparr());
+    session.stats->draw(key, session.player->get_pos());
+    session.map->draw({100, 50});
+    session.player->update(key, session.map->get_maparr());
     
     wnoutrefresh(stdscr); 
     napms(NAPMS);
@@ -50,8 +54,7 @@ int main() {
     SCREEN *s = newterm(NULL, stdout, stdin);
     set_term(s);
 
-    if (has_colors() == FALSE)
-    {
+    if (has_colors() == FALSE) {
         printf("No color.");
 
         endwin();
@@ -59,10 +62,9 @@ int main() {
         return 0;
     }
 
-    setup();
-    while (TRUE)
-    {
-        if (loop() == EXIT) break;
+    GameSession session;
+    while (TRUE) {
+        if (loop(session) == EXIT) break;
     }
 
     endwin();

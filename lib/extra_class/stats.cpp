@@ -1,15 +1,15 @@
 #include "stats.h"
 
-Stats::Stats(int width, int height, int color_pair, int x, int y)
-: m_stats_win(newwin(width, height, x, y))
-{
+Stats::Stats(const Tvec& size, int color_pair, const Tvec& pos)
+: m_stats_win(newwin(size.y, size.x, pos.y, pos.x)) {
     wbkgd(m_stats_win, COLOR_PAIR(color_pair) | A_BOLD);
 }
 
-Stats::~Stats() { if (m_stats_win) delwin(m_stats_win); }
+Stats::~Stats() {
+    if (m_stats_win) delwin(m_stats_win);
+}
 
-static long check_mem ()
-{
+static long check_mem () {
     long pages = 0; 
     static long rss_kb = 0;
 
@@ -18,11 +18,11 @@ static long check_mem ()
         rss_kb = pages * sysconf(_SC_PAGESIZE) / KB;
     }
     statm.close();
+    
     return  rss_kb;
 }
 
-void Stats::draw(chtype key, Tvec& pos)
-{
+void Stats::draw(chtype_i key, const Tvec& pos) {
     long rss_kb = 0;
     rss_kb = check_mem();
 

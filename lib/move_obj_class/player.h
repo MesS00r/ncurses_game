@@ -7,15 +7,16 @@
 class Player{
 private:
     chtype_i m_ch;
-    int m_color_pair, m_speed;
-    Tvec m_pos;
+    int m_colorp;
+    int m_speed;
+    TVec m_pos;
 public:
     Player() : Player(0, 0, 0, {0, 0}) {}
-    Player(chtype_i ch, int speed, int color_pair, const Tvec& pos);
+    Player(chtype_i ch, int speed, int colorp, const TVec& pos);
 
-    void update(int key, const Maparr& map);
-    const Tvec& get_pos();
-    void set_pos(const Tvec& pos);
+    void update(int key, const MapArr& map);
+    const TVec& get_pos();
+    void set_pos(const TVec& pos);
 
     Player(const Player&) = delete;
     Player& operator = (const Player&) = delete;

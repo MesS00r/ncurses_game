@@ -1,6 +1,6 @@
 #include "stats.h"
 
-Stats::Stats(const Tvec& size, int color_pair, const Tvec& pos)
+Stats::Stats(const TVec& size, int color_pair, const TVec& pos)
 : m_stats_win(newwin(size.y, size.x, pos.y, pos.x)) {
     wbkgd(m_stats_win, COLOR_PAIR(color_pair) | A_BOLD);
 }
@@ -22,7 +22,7 @@ static long check_mem () {
     return  rss_kb;
 }
 
-void Stats::draw(chtype_i key, const Tvec& pos) {
+void Stats::draw(chtype_i key, const TVec& pos) {
     long rss_kb = 0;
     rss_kb = check_mem();
 
@@ -32,5 +32,4 @@ void Stats::draw(chtype_i key, const Tvec& pos) {
 
     touchwin(m_stats_win);
     wnoutrefresh(m_stats_win);
-    doupdate();
 }

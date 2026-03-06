@@ -6,24 +6,23 @@
 
 class Map {
 private:
-    Maparr m_map;
-    chtype_i m_wallch;
-    int m_wall_color_pair;
+    MapArr m_map;
+    MapBuffer m_buffer;
 public:
-    Map() : Map({0, 0}, 0, 0) {}
-    Map(const Tvec& size, chtype_i wallch, int wall_color_pair);
+    Map() : Map({0, 0}, {{0, 0, 0}, {0, 0, 0}}) {}
+    Map(const TVec& size, const MapBuffer& buffer);
 
-    void draw(const Tvec& size);
-    env_type get_cell(const Tvec& pos);
-    const Maparr& get_maparr();
-    void set_cell(env_type type, const Tvec& pos);
+    void draw(const TVec& size);
+    env_type get_cell(const TVec& pos);
+    const MapArr& get_maparr();
+    void set_cell(env_type type, const TVec& pos);
 
     Map(const Map&) = delete;
     Map& operator = (const Map&) = delete;
 
     ~Map() = default;
     Map(Map&&) = default;
-    Map& operator = (Map&&) = delete;
+    Map& operator = (Map&&) = default;
 };
 
 #endif //MAP_H_INCLUDED

@@ -10,8 +10,15 @@ constexpr int PLAYER_PAIR = 1;
 constexpr int WALL_PAIR = 2;
 constexpr int STATS_PAIR = 3;
 
-// const Tvec STATS_SIZE = {15, 3};
-// const Tvec MAP_SIZE = {100, 50};
+const TVec STATS_POS = {0, 0};
+const TVec PLAYER_POS = {0, 3};
+const TVec WALL_POS = {10, 15};
+
+const TVec STATS_SIZE = {15, 3};
+const TVec MAP_SIZE = {100, 30};
+const TVec MAP_DRAW_SIZE = {100, 30};
+
+constexpr int PLAYER_SPEED = 1;
 
 struct GameSession {
     std::unique_ptr<Stats> stats;
@@ -28,12 +35,14 @@ struct GameSession {
         init_pair(STATS_PAIR, COLOR_BLACK, COLOR_WHITE);
         init_pair(PLAYER_PAIR, COLOR_GREEN, COLOR_BLACK);
         init_pair(WALL_PAIR, COLOR_RED, COLOR_BLACK);
+        
+        MapBuffer map_buffer({'.', WALL_CH, '~', 'f'}, {0, WALL_PAIR, 0, 0});
+        map = std::make_unique<Map>(MAP_SIZE, map_buffer);
+        
+        stats = std::make_unique<Stats>(STATS_SIZE, STATS_PAIR, STATS_POS);
+        player = std::make_unique<Player>(PLAYER_CH, PLAYER_SPEED, PLAYER_PAIR, PLAYER_POS);
 
-        stats = std::make_unique<Stats>(Tvec{15, 3}, STATS_PAIR, Tvec{1, 2});
-        player = std::make_unique<Player>(PLAYER_CH, 1, PLAYER_PAIR, Tvec{1, 2});
-        map = std::make_unique<Map>(Tvec{100, 50}, WALL_CH, WALL_PAIR);
-
-        map->set_cell(WALL, {10, 15});
+        map->set_cell(WALL, WALL_POS);
     }
 };
 
@@ -41,17 +50,20 @@ exit_code loop(GameSession& session) {
     chtype_i key = getch();
     if (key == KEY_CTRLC) return EXIT;
 
-    session.stats->draw(key, session.player->get_pos());
-    session.map->draw({100, 50});
+    wnoutrefresh(stdscr);
+
+    session.map->draw(MAP_DRAW_SIZE);
     session.player->update(key, session.map->get_maparr());
-    
-    wnoutrefresh(stdscr); 
+    session.stats->draw(key, session.player->get_pos());
+     
+    doupdate();
     napms(NAPMS);
     return CONTINUE;
 }
 
 int main() {
-    SCREEN *s = newterm(NULL, stdout, stdin);
+    SCREEN *s = nullptr; 
+    s = newterm(NULL, stdout, stdin);
     set_term(s);
 
     if (has_colors() == FALSE) {
@@ -64,7 +76,7 @@ int main() {
 
     GameSession session;
     while (TRUE) {
-        if (loop(session) == EXIT) break;
+        if (!loop(session)) break;
     }
 
     endwin();

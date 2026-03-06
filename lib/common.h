@@ -2,6 +2,7 @@
 #define COMMON_H_INCLUDED
 
 #include <vector>
+#include <array>
 
 template<typename T, typename U>
 T sc(U val) {
@@ -12,164 +13,149 @@ constexpr int KEY_CTRLC = 3;
 constexpr int KB = 1024;
 constexpr int NAPMS = 30;
 
-typedef unsigned int exit_code;
-constexpr exit_code CONTINUE = 0;
-constexpr exit_code EXIT = 1;
+typedef bool exit_code;
+constexpr exit_code EXIT = false;
+constexpr exit_code CONTINUE = true;
 
 typedef unsigned int env_type;
-constexpr env_type NONE = 0;
+constexpr env_type VOID = 0;
 constexpr env_type WALL = 1;
+constexpr env_type WATER = 2;
+constexpr env_type TREE = 3;
 
 typedef int chtype_i;
 
-struct Tvec {
-    Tvec() : Tvec(0, 0) {}
+struct TVec {
+    TVec() : TVec(0, 0) {}
 
-    Tvec(int X, int Y)
+    TVec(int X, int Y)
     : x(X)
     , y(Y) {}
 
     int x, y;
 
-    Tvec operator + (const Tvec& other) const {
+    TVec operator + (const TVec& other) const {
         return {x + other.x, y + other.y};
     }
 
-    Tvec operator + (const int num) const {
+    TVec operator + (const int num) const {
         return {x + num, y + num};
     }
 
-    Tvec operator - (const Tvec& other) const {
+    TVec operator - (const TVec& other) const {
         return {x - other.x, y - other.y};
     }
 
-    Tvec operator - (const int num) const {
+    TVec operator - (const int num) const {
         return {x - num, y - num};
     }
 
-    Tvec operator * (const Tvec& other) const {
+    TVec operator * (const TVec& other) const {
         return {x * other.x, y * other.y};
     }
 
-    Tvec operator * (const int num) const {
+    TVec operator * (const int num) const {
         return {x * num, y * num};
     }
 
-    Tvec operator / (const Tvec& other) const {
+    TVec operator / (const TVec& other) const {
         return {x / other.x, y / other.y};
     }
 
-    Tvec operator / (const int num) const {
+    TVec operator / (const int num) const {
         return {x / num, y / num};
     }
 
-    Tvec operator % (const Tvec& other) const {
+    TVec operator % (const TVec& other) const {
         return {x % other.x, y % other.y};
     }
 
-    Tvec operator % (const int num) const {
+    TVec operator % (const int num) const {
         return {x % num, y % num};
     }
 
-    Tvec& operator += (const Tvec& other) {
+    TVec& operator += (const TVec& other) {
         x += other.x; y += other.y;
         return *this;
     }
 
-    Tvec& operator += (const int num) {
+    TVec& operator += (const int num) {
         x += num; y += num;
         return *this;
     }
 
-    Tvec& operator -= (const Tvec& other) {
+    TVec& operator -= (const TVec& other) {
         x -= other.x; y -=other.y;
         return *this;
     }
 
-    Tvec& operator -= (const int num) {
+    TVec& operator -= (const int num) {
         x -= num; y -= num;
         return *this;
     }
 
-    Tvec& operator *= (const Tvec& other) {
+    TVec& operator *= (const TVec& other) {
         x *= other.x; y *= other.y;
         return *this;
     }
 
-    Tvec& operator *= (const int num) {
+    TVec& operator *= (const int num) {
         x *= num; y *= num;
         return *this;
     }
 
-    Tvec& operator /= (const Tvec& other) {
+    TVec& operator /= (const TVec& other) {
         x /= other.x; y /= other.y;
         return *this;
     }
 
-    Tvec& operator /= (const int num) {
+    TVec& operator /= (const int num) {
         x /= num; y /= num;
         return *this;
     }
 
-    Tvec& operator %= (const Tvec& other) {
+    TVec& operator %= (const TVec& other) {
         x %= other.x; y %= other.y;
         return *this;
     }
 
-    Tvec& operator %= (const int num) {
+    TVec& operator %= (const int num) {
         x %= num; y %= num;
         return *this;
     }
-
-    bool operator > (const Tvec other) const {
-        return x > other.x && y > other.y;
-    }
-
-    bool operator < (const Tvec other) const {
-        return x < other.x && y < other.y;
-    }
-
-    bool operator == (const Tvec other) const {
-        return x == other.x && y == other.y;
-    }
-
-    bool operator != (const Tvec other) const {
-        return x != other.x && y != other.y;
-    }
-
-    bool operator >= (const Tvec other) const {
-        return x >= other.x && y >= other.y;
-    }
-
-    bool operator <= (const Tvec other) const {
-        return x <= other.x && y <= other.y;
-    }
 };
 
-struct Maparr {
+struct MapArr {
     std::vector<env_type> map;
-    int x, y;
+    TVec size;
 
-    Maparr(Tvec size)
-    : map(sc<size_t>(size.x * size.y))
-    , x(size.x)
-    , y(size.y) {}
+    MapArr() : MapArr({0, 0}) {}
+    MapArr(TVec SIZE)
+    : map(sc<size_t>(SIZE.x * SIZE.y))
+    , size(SIZE) {}
 
-    env_type& operator () (int X, int Y) {
-        return map[sc<size_t>(Y * y + X)];
+    env_type& operator () (const TVec& pos) {
+        return map[sc<size_t>(pos.y * size.x + pos.x)];
     }
 
-    const env_type& operator () (int X, int Y) const {
-        return map[sc<size_t>(Y * y + X)];
+    const env_type& operator () (const TVec& pos) const {
+        return map[sc<size_t>(pos.y * size.x + pos.x)];
     }
 
-    env_type& operator () (const Tvec& pos) {
-        return map[sc<size_t>(pos.y * y + pos.x)];
-    }
+    // bool is_inside(const TVec& other) const {
+    //     return 
+    // }
+};
 
-    const env_type& operator () (const Tvec& pos) const {
-        return map[sc<size_t>(pos.y * y + pos.x)];
-    }
+struct MapBuffer {
+    std::array<chtype_i, 4> chs;
+    std::array<int, 4> pairs;
+
+    MapBuffer() : MapBuffer({0, 0 ,0, 0}, {0, 0 ,0, 0}) {}
+    MapBuffer(const std::array<chtype_i, 4>& CHS
+        , const std::array<int, 4>& PAIRS)
+    : chs(CHS)
+    , pairs(PAIRS) {}
 };
 
 #endif //COMMON_H_INCLUDED

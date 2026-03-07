@@ -23,9 +23,9 @@ static const TVec move(int key) {
 }
 
 static bool check_col(const TVec& cell, const MapArr& map) {
-    // if (map.is_inside(cell)) return false;
-    if (map(cell) == VOID) return false;
-    return true;
+    if (!map.is_inside(cell)) return TRUE;
+    if (map(cell) != VOID) return TRUE;
+    return FALSE;
 }
 
 void Player::update(int key, const MapArr& map) {
@@ -41,10 +41,6 @@ void Player::update(int key, const MapArr& map) {
     draw(m_pos, m_colorp, m_ch);
 }
 
-const TVec& Player::get_pos() {
-    return m_pos; 
-}
+const TVec& Player::get_pos() { return m_pos; }
 
-void Player::set_pos(const TVec& pos) {
-    m_pos = pos; 
-}
+void Player::set_pos(const TVec& pos) { m_pos = pos; }
